@@ -32,7 +32,7 @@ services:
       DATABASE_PASSWORD: ${DATABASE_PASSWORD}
       SECRET_KEY_BASE: ${SECRET_KEY_BASE}
       # SMTP Settings
-      SMTP_SERVER: ${VARIABLE}
+      SMTP_SERVER: ${SMTP_SERVER}
       SMTP_PORT: 587
       SMTP_USERNAME: ${SMTP_USERNAME}
       SMTP_PASSWORD: ${SMTP_PASSWORD}
@@ -57,7 +57,7 @@ services:
     restart: unless-stopped
     depends_on:
       - manyfold-db
-      - redis-server
+      - manyfold-redis
     networks:
       - manyfold
     # Optional, but recommended for better security
