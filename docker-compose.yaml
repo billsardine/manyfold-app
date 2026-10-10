@@ -1,0 +1,95 @@
+services:
+  manyfold-app:
+    # See https://manyfold.app/get-started/docker for a full list of other image sources, e.g. GHCR
+    image: manyfold3d/manyfold:latest
+    ports:
+      - 3214:3214
+    volumes:
+      # Uncomment to add a filesystem volume for your model library (or multiple if
+      # you want multiple libraries), in the form <local_path>:<container_path>.
+      # The local path could be a folder that already contains models, in which case Manyfold
+      # will scan and import them, or it could be empty.
+      # The container path can be anything; you will need to enter it in the "new library" form.
+      # - /local/path/to/your/models:/models
+      # If you want to use any plugins, you will also need a persistent plugins folder
+      # /usr/src/app/plugins is the default, but you can set a different path using the
+      # PLUGINS_PATH environment variable.
+      # - /local/path/to/plugins:/usr/src/app/plugins
+      - ./config:/config
+      - /nfs/3d_browser:/libraries
+    environment:
+      # General Settings
+      # MULTIUSER: enabled
+      MAX_FILE_EXTRACT_SIZE: 1073741824
+      MAX_FILE_UPLOAD_SIZE: 1073741824
+      REDIS_URL: redis://manyfold-redis:6379/1
+      # Database Settings
+      DATABASE_ADAPTER: postgresql # mysql2 or sqlite3 are also supported
+      DATABASE_HOST: manyfold-db
+      DATABASE_PORT: 5432 # only needed for non-standard ports
+      DATABASE_NAME: manyfold
+      DATABASE_USER: ${DATABASE_USER}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+      # SMTP Settings
+      SMTP_SERVER: smtp.example.com
+      SMTP_PORT: 587
+      SMTP_USERNAME: ${SMTP_USERNAME}
+      SMTP_PASSWORD: ${SMTP_PASSWORD}
+      SMTP_FROM_ADDRESS: noreply@example.com
+      SMTP_DOMAIN: 
+      SMTP_AUTHENTICATION: 
+      PUBLIC_HOSTNAME:
+      # Performance
+      WEB_CONCURRENCY: 
+      RAILS_MAX_THREADS:
+      DEFAULT_WORKER_CONCURRENCY:
+      PERFORMANCE_WORKER_CONCURRENCY: 
+      # Security
+      # PUID: ${PUID}
+      # PGID: ${PGID}
+      # User Auth via OIDC
+      # OIDC_CLIENT_ID: 
+      # OIDC_CLIENT_SECRET: 
+      # OIDC_ISSUER: 
+      # OIDC_NAME: 
+      SUDO_RUN_UNSAFELY: enabled
+    restart: unless-stopped
+    depends_on:
+      - manyfold-db
+      - redis-server
+    networks:
+      - manyfold
+    # Optional, but recommended for better security
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - SETUID
+      - SETGID
+
+  manyfold-db:
+    image: postgres:15
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    restart: unless-stopped
+    networks:
+      - manyfold
+
+  manyfold-redis:
+    image: redis:7
+    restart: unless-stopped
+    networks:
+      - manyfold
+
+volumes:
+  db_data:
+
+networks:
+  manyfold:
