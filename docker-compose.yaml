@@ -54,6 +54,7 @@ services:
       # OIDC_ISSUER: ${OIDC_ISSUER}
       # OIDC_NAME: ${OIDC_NAME}
       SUDO_RUN_UNSAFELY: enabled
+      HTTPS_ONLY: disabled
     restart: unless-stopped
     depends_on:
       - manyfold-db
