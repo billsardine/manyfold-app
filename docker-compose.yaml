@@ -49,10 +49,11 @@ services:
       # PUID: ${PUID}
       # PGID: ${PGID}
       # User Auth via OIDC
-      # OIDC_CLIENT_ID: ${OIDC_CLIENT_ID}
-      # OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET}
-      # OIDC_ISSUER: ${OIDC_ISSUER}
-      # OIDC_NAME: ${OIDC_NAME}
+      MULTIUSER: ${MULTIUSER}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET}
+      OIDC_ISSUER: ${OIDC_ISSUER}
+      OIDC_NAME: ${OIDC_NAME}
       SUDO_RUN_UNSAFELY: enabled
       HTTPS_ONLY: disabled
     restart: unless-stopped
