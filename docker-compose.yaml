@@ -50,6 +50,7 @@ services:
       # PGID: ${PGID}
       # User Auth via OIDC
       MULTIUSER: ${MULTIUSER}
+      REGISTRATION: enabled
       OIDC_CLIENT_ID: ${OIDC_CLIENT_ID}
       OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET}
       OIDC_ISSUER: ${OIDC_ISSUER}
